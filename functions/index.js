@@ -1,24 +1,28 @@
-const functions = require('firebase-functions');
-const axios = require('axios');
+document.getElementById('startButton').addEventListener('click', startTracking);
+document.getElementById('stopButton').addEventListener('click', stopTracking);
 
-const API_URL = 'https://your-app-name.herokuapp.com';
+const API_URL = 'https://productivityapp-06361fe96871.herokuapp.com/';  // Replace with your actual backend URL
 
-exports.startSession = functions.https.onCall(async (data, context) => {
-  try {
-    const response = await axios.post(`${API_URL}/start`);
-    return response.data;
-  } catch (error) {
-    console.error('Error starting session:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to start session');
-  }
-});
+function startTracking() {
+    fetch(`${API_URL}/start`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('status').textContent = 'Study session started!';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('status').textContent = 'Error starting session';
+        });
+}
 
-exports.endSession = functions.https.onCall(async (data, context) => {
-  try {
-    const response = await axios.post(`${API_URL}/stop`);
-    return response.data;
-  } catch (error) {
-    console.error('Error ending session:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to end session');
-  }
-});
+function stopTracking() {
+    fetch(`${API_URL}/stop`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('status').textContent = 'Study session ended.';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('status').textContent = 'Error ending session';
+        });
+}
