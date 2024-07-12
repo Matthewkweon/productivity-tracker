@@ -10,7 +10,10 @@ function startTracking() {
     console.log('Start button clicked');
     fetch(`${API_URL}/start`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'Origin': 'https://matthewkweon.github.io'
+        },
         body: JSON.stringify({ userId })
     })
     .then(response => response.json())
