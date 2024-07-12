@@ -1,35 +1,20 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import time
-import pyautogui
-from pynput import keyboard
-from twilio.rest import Client
 import random
 import requests
-from flask_cors import CORS
 import threading
+import os
 
 app = Flask(__name__)
 CORS(app)
-# Twilio configuration
-"""
-account_sid = 'US062dcfd811912efe587c81ac03d20925'
-auth_token = 'Y8QW3G616NF7N3G4GU5643EH'
-twilio_phone_number = '+17753866072'
-your_phone_number = '+13147378208'
 
-
-
-client = Client(account_sid, auth_token)
-"""
-#API tokens
-PUSHOVER_API_TOKEN = 'a9qoo26o82jqweeg8p2zf3oudomt4h'
-PUSHOVER_USER_KEY = 'u1b3s25dbbus9eie2hy9jhtu6ah223'
+# API tokens
+PUSHOVER_API_TOKEN = os.environ.get('PUSHOVER_API_TOKEN', 'a9qoo26o82jqweeg8p2zf3oudomt4h')
+PUSHOVER_USER_KEY = os.environ.get('PUSHOVER_USER_KEY', 'u1b3s25dbbus9eie2hy9jhtu6ah223')
 
 # Global variables to track activity
-keyboard_activity = False
-last_activity_time = time.time()
-tracking_active = False
-tracking_thread = None
+sessions = {}
 
 # Bank of messages
 message_bank = [
@@ -48,31 +33,6 @@ message_bank = [
 def get_random_message():
     return random.choice(message_bank)
 
-def on_press(key):
-    global keyboard_activity, last_activity_time
-    keyboard_activity = True
-    last_activity_time = time.time()
-
-# Set up the keyboard listener
-listener = keyboard.Listener(on_press=on_press)
-listener.start()
-
-def is_user_active():
-    global keyboard_activity, last_activity_time
-    initial_position = pyautogui.position()
-    time.sleep(1)  # Wait for 1 second
-    new_position = pyautogui.position()
-    
-    mouse_active = abs(initial_position[0] - new_position[0]) > 5 or abs(initial_position[1] - new_position[1]) > 5
-    
-    if mouse_active:
-        last_activity_time = time.time()
-    
-    activity = mouse_active or keyboard_activity
-    keyboard_activity = False  # Reset keyboard activity flag
-    
-    return activity
-
 def send_pushover_notification():
     try:
         message = get_random_message()
@@ -89,50 +49,43 @@ def send_pushover_notification():
     except Exception as e:
         print(f"Error sending notification: {str(e)}")
 
-def track_activity():
-    global last_activity_time
-    while True:
+def check_inactivity(user_id):
+    while user_id in sessions and sessions[user_id]['active']:
         current_time = time.time()
-        if current_time - last_activity_time >= 300:  # 5 minutes
-            if not is_user_active():
-                send_pushover_notification()
-                last_activity_time = current_time  # Reset timer after sending notification
+        if current_time - sessions[user_id]['last_activity'] >= 300:  # 5 minutes
+            send_pushover_notification()
+            sessions[user_id]['last_activity'] = current_time
         time.sleep(60)  # Check every minute
 
-
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-sessions = {}
 @app.route('/start', methods=['POST'])
 def start_tracking():
-    global tracking_active, tracking_thread
-    if not tracking_active:
-        tracking_active = True
-        tracking_thread = threading.Thread(target=track_activity)
-        tracking_thread.start()
+    user_id = request.json.get('userId', 'default')
+    if user_id not in sessions:
+        sessions[user_id] = {
+            'last_activity': time.time(),
+            'active': True
+        }
+        threading.Thread(target=check_inactivity, args=(user_id,)).start()
         return jsonify({"status": "started"})
     return jsonify({"status": "already running"})
 
 @app.route('/stop', methods=['POST'])
 def stop_tracking():
-    global tracking_active, tracking_thread
-    if tracking_active:
-        tracking_active = False
-        if tracking_thread:
-            tracking_thread.join()
+    user_id = request.json.get('userId', 'default')
+    if user_id in sessions:
+        sessions[user_id]['active'] = False
+        del sessions[user_id]
         return jsonify({"status": "stopped"})
     return jsonify({"status": "not running"})
 
+@app.route('/activity', methods=['POST'])
+def update_activity():
+    user_id = request.json.get('userId', 'default')
+    if user_id in sessions:
+        sessions[user_id]['last_activity'] = time.time()
+        return jsonify({"status": "updated"})
+    return jsonify({"status": "no active session"}), 400
+
 if __name__ == '__main__':
-    """
-    listener = keyboard.Listener(on_press=on_press)
-    listener.start()
-    print("Starting the web server...")
-    print("Once it's running, go to http://127.0.0.1:5000/ in your web browser.")
-    app.run(debug=True, use_reloader=False)
-    """
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-"""u1b3s25dbbus9eie2hy9jhtu6ah223"""
