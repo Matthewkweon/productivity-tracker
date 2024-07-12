@@ -1,30 +1,43 @@
-// Initialize Firebase (replace with your config)
-const firebaseConfig = {
-    // Your Firebase configuration here
-  };
-  firebase.initializeApp(firebaseConfig);
-  
-  const functions = firebase.functions();
-  
+const API_URL = 'https://productivityapp-06361fe96871.herokuapp.com/'; // Replace with your actual Heroku app URL
+let userId = Date.now().toString();  // Simple unique identifier
+
+document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startButton').addEventListener('click', startTracking);
   document.getElementById('stopButton').addEventListener('click', stopTracking);
-  
-  function startTracking() {
-    const startSession = firebase.functions().httpsCallable('startSession');
-    startSession().then(result => {
-      document.getElementById('status').textContent = 'Study session started!';
-    }).catch(error => {
-      console.error(error);
-      document.getElementById('status').textContent = 'Error starting session';
-    });
-  }
-  
-  function stopTracking() {
-    const endSession = firebase.functions().httpsCallable('endSession');
-    endSession().then(result => {
-      document.getElementById('status').textContent = 'Study session ended.';
-    }).catch(error => {
-      console.error(error);
-      document.getElementById('status').textContent = 'Error ending session';
-    });
-  }
+});
+
+function startTracking() {
+  console.log('Start button clicked');
+  fetch(`${API_URL}/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Start response:', data);
+    document.getElementById('status').textContent = 'Study session started!';
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    document.getElementById('status').textContent = 'Error starting session';
+  });
+}
+
+function stopTracking() {
+  console.log('Stop button clicked');
+  fetch(`${API_URL}/stop`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Stop response:', data);
+    document.getElementById('status').textContent = 'Study session ended.';
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    document.getElementById('status').textContent = 'Error ending session';
+  });
+}
