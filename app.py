@@ -56,6 +56,32 @@ def send_pushover_notification():
     except Exception as e:
         print(f"Error sending notification: {str(e)}")
 
+user_activity = {}
+active_users = set()
+
+@app.route('/start', methods=['POST'])
+def start_tracking():
+    user_id = request.json.get('userId')
+    active_users.add(user_id)
+    user_activity[user_id] = time.time()
+    return jsonify({"status": "tracking started"})
+
+@app.route('/stop', methods=['POST'])
+def stop_tracking():
+    user_id = request.json.get('userId')
+    if user_id in active_users:
+        active_users.remove(user_id)
+    if user_id in user_activity:
+        del user_activity[user_id]
+    return jsonify({"status": "tracking stopped"})
+
+@app.route('/update_activity', methods=['POST'])
+def update_activity():
+    user_id = request.json.get('userId')
+    user_activity[user_id] = time.time()
+    return jsonify({"status": "activity updated"})
+
+
 def check_inactivity(user_id):
     while user_id in sessions and sessions[user_id]['active']:
         current_time = time.time()

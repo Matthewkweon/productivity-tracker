@@ -1,25 +1,20 @@
 const API_URL = 'https://productivityapp-06361fe96871.herokuapp.com'; // Replace with your actual Heroku app URL
-let userId = Date.now().toString();  // Simple unique identifier
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('startButton').addEventListener('click', startTracking);
-    document.getElementById('stopButton').addEventListener('click', stopTracking);
-});
+let userId = Date.now().toString();
+let trackingActive = false;
+let activityInterval;
 
 function startTracking() {
     console.log('Start button clicked');
     fetch(`${API_URL}/start`, {
         method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Origin': 'https://matthewkweon.github.io'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId })
     })
     .then(response => response.json())
     .then(data => {
         console.log('Start response:', data);
         document.getElementById('status').textContent = 'Study session started!';
+        trackingActive = true;
         startActivityMonitoring();
     })
     .catch(error => {
@@ -30,18 +25,16 @@ function startTracking() {
 
 function stopTracking() {
     console.log('Stop button clicked');
-    fetch(`${API_URL}/start`, {
+    fetch(`${API_URL}/stop`, {
         method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Origin': 'https://matthewkweon.github.io'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId })
     })
     .then(response => response.json())
     .then(data => {
         console.log('Stop response:', data);
         document.getElementById('status').textContent = 'Study session ended.';
+        trackingActive = false;
         stopActivityMonitoring();
     })
     .catch(error => {
@@ -50,20 +43,18 @@ function stopTracking() {
     });
 }
 
-let activityInterval;
+function updateActivity() {
+    if (trackingActive) {
+        fetch(`${API_URL}/update_activity`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId })
+        });
+    }
+}
 
 function startActivityMonitoring() {
-    activityInterval = setInterval(() => {
-        fetch(`${API_URL}/start`, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Origin': 'https://matthewkweon.github.io'
-            },
-            body: JSON.stringify({ userId })
-        })
-    }, 60000);  // Send activity update every minute
-
+    activityInterval = setInterval(updateActivity, 60000);  // Send activity update every minute
     document.addEventListener('mousemove', updateActivity);
     document.addEventListener('keypress', updateActivity);
 }
@@ -74,13 +65,5 @@ function stopActivityMonitoring() {
     document.removeEventListener('keypress', updateActivity);
 }
 
-function updateActivity() {
-    fetch(`${API_URL}/start`, {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Origin': 'https://matthewkweon.github.io'
-        },
-        body: JSON.stringify({ userId })
-    })
-}
+document.getElementById('startButton').addEventListener('click', startTracking);
+document.getElementById('stopButton').addEventListener('click', stopTracking);
