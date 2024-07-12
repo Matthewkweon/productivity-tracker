@@ -133,6 +133,6 @@ if __name__ == '__main__':
     print("Once it's running, go to http://127.0.0.1:5000/ in your web browser.")
     app.run(debug=True, use_reloader=False)
     """
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
 """u1b3s25dbbus9eie2hy9jhtu6ah223"""

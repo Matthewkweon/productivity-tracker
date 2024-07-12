@@ -1,1 +1,1 @@
-web: gunicorn productivityapp.py:app
+web: python app.py
