@@ -30,9 +30,12 @@ function startTracking() {
 
 function stopTracking() {
     console.log('Stop button clicked');
-    fetch(`${API_URL}/stop`, {
+    fetch(`${API_URL}/start`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'Origin': 'https://matthewkweon.github.io'
+        },
         body: JSON.stringify({ userId })
     })
     .then(response => response.json())
@@ -51,11 +54,14 @@ let activityInterval;
 
 function startActivityMonitoring() {
     activityInterval = setInterval(() => {
-        fetch(`${API_URL}/activity`, {
+        fetch(`${API_URL}/start`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Origin': 'https://matthewkweon.github.io'
+            },
             body: JSON.stringify({ userId })
-        });
+        })
     }, 60000);  // Send activity update every minute
 
     document.addEventListener('mousemove', updateActivity);
@@ -69,9 +75,12 @@ function stopActivityMonitoring() {
 }
 
 function updateActivity() {
-    fetch(`${API_URL}/activity`, {
+    fetch(`${API_URL}/start`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'Origin': 'https://matthewkweon.github.io'
+        },
         body: JSON.stringify({ userId })
-    });
+    })
 }
