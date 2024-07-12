@@ -1,4 +1,4 @@
-const API_URL = 'https://productivityapp-06361fe96871.herokuapp.com/'; // Replace with your actual Heroku app URL
+const API_URL = 'https://productivityapp-06361fe96871.herokuapp.com'; // Replace with your actual Heroku app URL
 let userId = Date.now().toString();  // Simple unique identifier
 
 document.addEventListener('DOMContentLoaded', () => {
