@@ -59,10 +59,10 @@ def send_pushover_notification():
 def check_inactivity(user_id):
     while user_id in sessions and sessions[user_id]['active']:
         current_time = time.time()
-        if current_time - sessions[user_id]['last_activity'] >= 30:  # 5 minutes
+        if current_time - sessions[user_id]['last_activity'] >= 5:  # 5 minutes
             send_pushover_notification()
             sessions[user_id]['last_activity'] = current_time
-        time.sleep(5)  # Check every minute
+        time.sleep(1)  # Check every minute
 
 @app.route('/start', methods=['POST'])
 def start_tracking():
