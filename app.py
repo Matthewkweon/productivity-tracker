@@ -5,19 +5,25 @@ import random
 import requests
 import threading
 import os
-from datetime import datetime, date
+from datetime import datetime, clock
 import pytz
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://matthewkweon.github.io"}})
+CORS(app, resources={r"/*": {"origins": ["https://matthewkweon.github.io", "http://localhost:5000"]}})
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
 
 # API tokens
 PUSHOVER_API_TOKEN = os.environ.get('PUSHOVER_API_TOKEN', 'a9qoo26o82jqweeg8p2zf3oudomt4h')
 PUSHOVER_USER_KEY = os.environ.get('PUSHOVER_USER_KEY', 'u1b3s25dbbus9eie2hy9jhtu6ah223')
 
-# Global variables
+# Global variables to track activity
 sessions = {}
-user_goals = {}
 
 # Bank of messages
 message_bank = [
@@ -52,49 +58,31 @@ def send_pushover_notification():
     except Exception as e:
         print(f"Error sending notification: {str(e)}")
 
-def check_inactivity():
-    while True:
-        current_time = time.time()
-        for user_id, session in list(sessions.items()):
-            if session['active'] and current_time - session['last_activity'] > 300:  # 5 minutes
-                send_pushover_notification()
-                session['last_activity'] = current_time  # Reset the timer after sending notification
-            
-            # Reset goals at the start of a new day
-            if user_id in user_goals and user_goals[user_id]['date'] != date.today().isoformat():
-                del user_goals[user_id]
-        
-        time.sleep(60)  # Check every minute
+user_activity = {}
+active_users = set()
+user_goals = {}
 
 @app.route('/start', methods=['POST'])
 def start_tracking():
-    user_id = request.json.get('userId', 'default')
-    if user_id not in sessions:
-        sessions[user_id] = {
-            'last_activity': time.time(),
-            'active': True
-        }
-        if not threading.active_count() > 1:  # Only start if not already running
-            threading.Thread(target=check_inactivity, daemon=True).start()
-        return jsonify({"status": "started"})
-    return jsonify({"status": "already running"})
+    user_id = request.json.get('userId')
+    active_users.add(user_id)
+    user_activity[user_id] = time.time()
+    return jsonify({"status": "tracking started"})
 
 @app.route('/stop', methods=['POST'])
 def stop_tracking():
-    user_id = request.json.get('userId', 'default')
-    if user_id in sessions:
-        sessions[user_id]['active'] = False
-        del sessions[user_id]
-        return jsonify({"status": "stopped"})
-    return jsonify({"status": "not running"})
+    user_id = request.json.get('userId')
+    if user_id in active_users:
+        active_users.remove(user_id)
+    if user_id in user_activity:
+        del user_activity[user_id]
+    return jsonify({"status": "tracking stopped"})
 
 @app.route('/update_activity', methods=['POST'])
 def update_activity():
-    user_id = request.json.get('userId', 'default')
-    if user_id in sessions:
-        sessions[user_id]['last_activity'] = time.time()
-        return jsonify({"status": "updated"})
-    return jsonify({"status": "no active session"}), 400
+    user_id = request.json.get('userId')
+    user_activity[user_id] = time.time()
+    return jsonify({"status": "activity updated"})
 
 @app.route('/set_goals', methods=['POST'])
 def set_goals():
@@ -113,6 +101,49 @@ def get_goals():
         if user_goals[user_id]['date'] == date.today().isoformat():
             return jsonify(user_goals[user_id]['goals'])
     return jsonify([])
+
+def check_inactivity(user_id):
+    while True:
+        current_time = datetime.now(pytz.utc)
+        for user_id in list(active_users):
+            if user_id in user_activity and (current_time - user_activity[user_id]).total_seconds() > 300:  # 5 minutes
+                send_pushover_notification()
+                user_activity[user_id] = current_time  # Reset the timer after sending notification
+            
+            # Reset goals at the start of a new day
+            if user_id in user_goals and user_goals[user_id]['date'] != current_time.date().isoformat():
+                del user_goals[user_id]
+        
+        time.sleep(60)  # Check every minute
+
+@app.route('/start', methods=['POST'])
+def start_tracking():
+    user_id = request.json.get('userId', 'default')
+    if user_id not in sessions:
+        sessions[user_id] = {
+            'last_activity': time.time(),
+            'active': True
+        }
+        threading.Thread(target=check_inactivity, args=(user_id,)).start()
+        return jsonify({"status": "started"})
+    return jsonify({"status": "already running"})
+
+@app.route('/stop', methods=['POST'])
+def stop_tracking():
+    user_id = request.json.get('userId', 'default')
+    if user_id in sessions:
+        sessions[user_id]['active'] = False
+        del sessions[user_id]
+        return jsonify({"status": "stopped"})
+    return jsonify({"status": "not running"})
+
+@app.route('/activity', methods=['POST'])
+def update_activity():
+    user_id = request.json.get('userId', 'default')
+    if user_id in sessions:
+        sessions[user_id]['last_activity'] = time.time()
+        return jsonify({"status": "updated"})
+    return jsonify({"status": "no active session"}), 400
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
