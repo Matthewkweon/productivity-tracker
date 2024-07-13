@@ -14,8 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     socket.on('disconnect', () => {
         console.log('Disconnected from WebSocket');
     });
-    
-    
+
     const startBtn = document.getElementById('startButton');
     const stopBtn = document.getElementById('stopButton');
     const goalsModal = document.getElementById('goalsModal');
@@ -93,7 +92,6 @@ function startTracking(goals) {
         console.log('Start response:', data);
         document.getElementById('status').textContent = 'Study session started!';
         trackingActive = true;
-        startSocketConnection(); // Start socket connection here
     })
     .catch(error => {
         console.error('Error:', error);
@@ -113,41 +111,11 @@ function stopTracking() {
         console.log('Stop response:', data);
         document.getElementById('status').textContent = 'Study session ended.';
         trackingActive = false;
-        stopSocketConnection(); // Stop socket connection here
     })
     .catch(error => {
         console.error('Error:', error);
         document.getElementById('status').textContent = 'Error ending session';
     });
-}
-
-function startSocketConnection() {
-    socket = io(API_URL); // Initialize the socket connection
-
-    socket.on('connect', () => {
-        console.log('Connected to WebSocket');
-    });
-
-    socket.on('disconnect', () => {
-        console.log('Disconnected from WebSocket');
-    });
-}
-
-function stopSocketConnection() {
-    if (socket) {
-        socket.disconnect();
-        socket = null;
-    }
-}
-
-function updateActivity() {
-    if (trackingActive) {
-        fetch(`${API_URL}/update_activity`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId })
-        });
-    }
 }
 
 function startActivityMonitoring() {
@@ -160,6 +128,16 @@ function stopActivityMonitoring() {
     clearInterval(activityInterval);
     document.removeEventListener('mousemove', updateActivity);
     document.removeEventListener('keypress', updateActivity);
+}
+
+function updateActivity() {
+    if (trackingActive) {
+        fetch(`${API_URL}/update_activity`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId })
+        });
+    }
 }
 
 function startPomodoro() {
