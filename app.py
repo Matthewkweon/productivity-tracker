@@ -95,10 +95,10 @@ def update_activity():
 def check_inactivity(user_id):
     while user_id in sessions and sessions[user_id]['active']:
         current_time = time.time()
-        if current_time - sessions[user_id]['last_activity'] >= 100:  # 5 minutes
+        if current_time - sessions[user_id]['last_activity'] >= 300:  # 5 minutes
             send_pushover_notification()
             sessions[user_id]['last_activity'] = current_time
-        time.sleep(15)  # Check every minute
+        time.sleep(30)  # Check every minute
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
