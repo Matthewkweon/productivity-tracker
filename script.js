@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const goalsInput = document.getElementById('goalsInput');
     const goalsDisplay = document.getElementById('goalsDisplay');
     const goalsText = document.getElementById('goalsText');
+    const pomodoroStatus = document.getElementById('pomodoroStatus');
 
     let studyGoals = "";
     startBtn.addEventListener('click', () => {
@@ -49,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Study goals saved: ", studyGoals);  // For debugging
         startTracking(studyGoals);
+        startPomodoro();
     });
     
 
@@ -59,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Study session ended. Goals cleared.");  // For debugging
 
         stopTracking();
+        stopPomodoro();
     });
 });
 
@@ -123,4 +126,33 @@ function stopActivityMonitoring() {
     clearInterval(activityInterval);
     document.removeEventListener('mousemove', updateActivity);
     document.removeEventListener('keypress', updateActivity);
+}
+
+function startPomodoro() {
+    let time = 25 * 60;
+    timerInterval = setInterval(() => {
+        if (time <= 0) {
+            if (isStudySession) {
+                isStudySession = false;
+                time = 5 * 60; // 5-minute break
+                document.getElementById('pomodoroStatus').textContent = 'Break time! Take a 5-minute break.';
+            } else {
+                isStudySession = true;
+                time = 25 * 60; // 25-minute study session
+                document.getElementById('pomodoroStatus').textContent = 'Study time! 25 minutes of focused study.';
+            }
+        }
+
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        document.getElementById('timer').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        time--;
+    }, 1000);
+}
+
+function stopPomodoro() {
+    clearInterval(timerInterval);
+    document.getElementById('timer').textContent = '25:00';
+    document.getElementById('pomodoroStatus').textContent = '';
+    isStudySession = true;
 }
