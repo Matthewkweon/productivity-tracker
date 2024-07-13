@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productivity Tracker</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/5.0.1/socket.io.js"></script>
 </head>
 <body>
     <div class="main-container">
@@ -24,12 +25,11 @@
             <div id="goalsText"></div>
         </div>
     </div>
-    <div id="goalsModal">
+    <div id="goalsModal" style="display:none;">
         <h2>Study Goals</h2>
         <textarea id="goalsInput" placeholder="Write down your goals..."></textarea>
         <button id="saveGoalsBtn">Save Goals</button>
     </div>
     <script src="script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/5.0.1/socket.io.js"></script>
 </body>
 </html>

@@ -5,6 +5,17 @@ let activityInterval;
 let socket;
 
 document.addEventListener("DOMContentLoaded", function () {
+    socket = io(API_URL); // Initialize the socket connection
+
+    socket.on('connect', () => {
+        console.log('Connected to WebSocket');
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Disconnected from WebSocket');
+    });
+    
+    
     const startBtn = document.getElementById('startButton');
     const stopBtn = document.getElementById('stopButton');
     const goalsModal = document.getElementById('goalsModal');
