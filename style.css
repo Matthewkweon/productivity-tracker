@@ -24,17 +24,10 @@ button {
     margin-top: 1rem;
     font-weight: bold;
 }   
-
-goalsDisplay {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-}
-
 .goal-item {
-    display: none;
-    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
 }
 
 .goal-checkbox {
