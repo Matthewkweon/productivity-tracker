@@ -5,8 +5,6 @@ import random
 import requests
 import threading
 import os
-from datetime import datetime, clock
-import pytz
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["https://matthewkweon.github.io", "http://localhost:5000"]}})
@@ -60,7 +58,6 @@ def send_pushover_notification():
 
 user_activity = {}
 active_users = set()
-user_goals = {}
 
 @app.route('/start', methods=['POST'])
 def start_tracking():
@@ -84,36 +81,13 @@ def update_activity():
     user_activity[user_id] = time.time()
     return jsonify({"status": "activity updated"})
 
-@app.route('/set_goals', methods=['POST'])
-def set_goals():
-    user_id = request.json.get('userId')
-    goals = request.json.get('goals')
-    user_goals[user_id] = {
-        'goals': goals,
-        'date': date.today().isoformat()
-    }
-    return jsonify({"status": "goals set"})
-
-@app.route('/get_goals', methods=['GET'])
-def get_goals():
-    user_id = request.args.get('userId')
-    if user_id in user_goals:
-        if user_goals[user_id]['date'] == date.today().isoformat():
-            return jsonify(user_goals[user_id]['goals'])
-    return jsonify([])
 
 def check_inactivity(user_id):
-    while True:
-        current_time = datetime.now(pytz.utc)
-        for user_id in list(active_users):
-            if user_id in user_activity and (current_time - user_activity[user_id]).total_seconds() > 300:  # 5 minutes
-                send_pushover_notification()
-                user_activity[user_id] = current_time  # Reset the timer after sending notification
-            
-            # Reset goals at the start of a new day
-            if user_id in user_goals and user_goals[user_id]['date'] != current_time.date().isoformat():
-                del user_goals[user_id]
-        
+    while user_id in sessions and sessions[user_id]['active']:
+        current_time = time.time()
+        if current_time - sessions[user_id]['last_activity'] >= 300:  # 5 minutes
+            send_pushover_notification()
+            sessions[user_id]['last_activity'] = current_time
         time.sleep(60)  # Check every minute
 
 @app.route('/start', methods=['POST'])
