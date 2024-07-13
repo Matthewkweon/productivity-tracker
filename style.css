@@ -21,6 +21,7 @@ body {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
     width: 400px; /* Set a fixed width for both boxes */
+    box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
 button {
@@ -49,10 +50,10 @@ button {
     margin-top: 2rem; /* Add space at the top */
     text-align: left; /* Align text to the left for readability */
     width: 400px; /* Ensure the width matches the container */
-    max-width: 600px; /* Limit the maximum width */
+    max-width: 400px; /* Limit the maximum width */
     background-color: white;
     padding: 1rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-left: 5rem; /* Increase the margin to the left */
+    word-wrap: break-word; /* Ensure long words or URLs break to avoid overflow */
 }
