@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
         startTracking(studyGoals);
         startPomodoro();
     });
+    
 
     stopBtn.addEventListener('click', () => {
         studyGoals = "";
@@ -62,15 +63,8 @@ document.addEventListener("DOMContentLoaded", function () {
         stopTracking();
         stopPomodoro();
     });
-
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-            startActivityMonitoring();
-        } else {
-            stopActivityMonitoring();
-        }
-    });
 });
+
 
 function startTracking(goals) {
     console.log('Start button clicked');
@@ -123,7 +117,6 @@ function updateActivity() {
 }
 
 function startActivityMonitoring() {
-    updateActivity();  // Initial update when starting the session
     activityInterval = setInterval(updateActivity, 60000);  // Send activity update every minute
     document.addEventListener('mousemove', updateActivity);
     document.addEventListener('keypress', updateActivity);
@@ -137,6 +130,7 @@ function stopActivityMonitoring() {
 
 function startPomodoro() {
     let time = 25 * 60;
+    let isStudySession = true;  // Initialize isStudySession to true
     timerInterval = setInterval(() => {
         if (time <= 0) {
             if (isStudySession) {
@@ -161,5 +155,4 @@ function stopPomodoro() {
     clearInterval(timerInterval);
     document.getElementById('timer').textContent = '25:00';
     document.getElementById('pomodoroStatus').textContent = '';
-    isStudySession = true;
 }
