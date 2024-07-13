@@ -11,6 +11,7 @@ body {
 .main-container {
     display: flex;
     gap: 3rem; /* Ensure there is a gap between the two sections */
+    align-items: center; /* Vertically center the children */
 }
 
 .container, #goalsDisplay {
