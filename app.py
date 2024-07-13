@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_socketio import SocketIO, disconnect
 import time
 import random
 import requests
@@ -8,7 +7,6 @@ import threading
 import os
 
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*")
 CORS(app, resources={r"/*": {"origins": ["https://matthewkweon.github.io", "http://localhost:5000"]}})
 
 @app.after_request
@@ -60,19 +58,6 @@ def send_pushover_notification():
             print(f"Failed to send notification. Status code: {r.status_code}")
     except Exception as e:
         print(f"Error sending notification: {str(e)}")
-
-@socketio.on('connect')
-def handle_connect():
-    print('Client connected')
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    print('Client disconnected')   
-
-@socketio.on('activity_ping')
-def handle_activity_ping(data):
-    user_id = data['userId']
-    sessions[user_id] = time.time()
 
 user_activity = {}
 active_users = set()

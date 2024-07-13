@@ -63,14 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
         stopTracking();
         stopPomodoro();
     });
-    document.addEventListener('mousemove', updateLastActivity);
-    document.addEventListener('keypress', updateLastActivity);
-
-    function updateLastActivity() {
-        if (socket && socket.connected) {
-            socket.emit('activity_ping', { userId: userId });
-        }
-    }
 });
 
 
@@ -112,25 +104,6 @@ function stopTracking() {
         console.error('Error:', error);
         document.getElementById('status').textContent = 'Error ending session';
     });
-}
-
-function startSocketConnection() {
-    socket = io(API_URL);
-
-    socket.on('connect', () => {
-        console.log('Connected to WebSocket');
-    });
-
-    socket.on('disconnect', () => {
-        console.log('Disconnected from WebSocket');
-    });
-}
-
-function stopSocketConnection() {
-    if (socket) {
-        socket.disconnect();
-        socket = null;
-    }
 }
 
 function updateActivity() {
