@@ -21,11 +21,36 @@ document.addEventListener("DOMContentLoaded", function () {
         studyGoals = goalsInput.value;
         goalsModal.style.display = 'none';
         goalsDisplay.style.display = 'block';
-        goalsText.innerHTML = studyGoals.replace(/\n/g, '<br>');
-        console.log("Study goals saved: ", studyGoals);  // For debugging
 
+        // Split the goals into an array
+        const goalsArray = studyGoals.split('\n');
+    
+        // Clear any existing content in goalsText
+        goalsText.innerHTML = '';
+    
+        // Create checkboxes for each goal
+        goalsArray.forEach(goal => {
+            if (goal.trim()) {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'goal-checkbox';
+    
+                const label = document.createElement('label');
+                label.textContent = goal;
+    
+                const div = document.createElement('div');
+                div.className = 'goal-item';
+                div.appendChild(checkbox);
+                div.appendChild(label);
+    
+                goalsText.appendChild(div);
+            }
+        });
+
+        console.log("Study goals saved: ", studyGoals);  // For debugging
         startTracking(studyGoals);
     });
+    
 
     stopBtn.addEventListener('click', () => {
         studyGoals = "";

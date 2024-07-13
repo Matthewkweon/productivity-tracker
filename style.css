@@ -24,3 +24,12 @@ button {
     margin-top: 1rem;
     font-weight: bold;
 }   
+.goal-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.goal-checkbox {
+    margin-right: 10px;
+}
