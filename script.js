@@ -16,6 +16,7 @@ function startTracking() {
         document.getElementById('status').textContent = 'Study session started!';
         trackingActive = true;
         startActivityMonitoring();
+        getGoals();
     })
     .catch(error => {
         console.error('Error:', error);
