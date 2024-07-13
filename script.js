@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         studyGoals = "";
         goalsInput.value = "";
         goalsDisplay.style.display = 'none';
+        goalsText.innerHTML = studyGoals.replace(/\n/g, '<br>');
         console.log("Study session ended. Goals cleared.");  // For debugging
 
         stopTracking();
