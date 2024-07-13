@@ -2,14 +2,15 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     height: 100vh;
     margin: 0;
     background-color: #f0f0f0;
 }
+
 .main-container {
     display: flex;
-    gap: 5em; /* Add space between the two sections */
+    gap: 3rem; /* Ensure there is a gap between the two sections */
 }
 
 .container, #goalsDisplay {
@@ -28,10 +29,12 @@ button {
     margin: 0.5rem;
     cursor: pointer;
 }
+
 #status {
     margin-top: 1rem;
     font-weight: bold;
-}   
+}
+
 .goal-item {
     display: flex;
     align-items: center;
@@ -40,24 +43,16 @@ button {
 
 .goal-checkbox {
     margin-right: 10px;
-    margin-left: 10px;
 }
 
-#goalsDisplay{
+#goalsDisplay {
     margin-top: 2rem; /* Add space at the top */
     text-align: left; /* Align text to the left for readability */
-    width: 400px; /* Ensure it takes the full width */
+    width: 400px; /* Ensure the width matches the container */
     max-width: 600px; /* Limit the maximum width */
     background-color: white;
     padding: 1rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-left: 3rem; /* Increase the margin to the left */
-}
-
-#goalsText {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-left: 5rem; /* Increase the margin to the left */
 }
