@@ -37,8 +37,9 @@ button {
 
 #goalsDisplay{
     margin-top: 2rem; /* Added margin to top of goals display */
+    margin-left: 5rem; /* Added margin to left of goals display */
     text-align: left; /* Align text to the left for readability */
-    width: 100%; /* Ensure it takes the full width */
+    width: 50%; /* Ensure it takes the full width */
     max-width: 600px; /* Limit the maximum width */
 }
 
