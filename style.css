@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     height: 100vh;
     margin: 0;
     background-color: #f0f0f0;
@@ -20,7 +20,6 @@ body {
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-bottom: 2rem;
     width: 400px; /* Set a fixed width for both boxes */
     box-sizing: border-box; /* Ensure padding is included in the width */
 }
