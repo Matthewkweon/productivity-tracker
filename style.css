@@ -9,7 +9,7 @@ body {
 }
 .main-container {
     display: flex;
-    gap: 10rem; /* Add space between the two sections */
+    gap: 5em; /* Add space between the two sections */
 }
 
 .container {
@@ -44,7 +44,7 @@ button {
 #goalsDisplay{
     margin-top: 2rem; /* Add space at the top */
     text-align: left; /* Align text to the left for readability */
-    width: 100%; /* Ensure it takes the full width */
+    width: 400px; /* Ensure it takes the full width */
     max-width: 600px; /* Limit the maximum width */
     background-color: white;
     padding: 1rem;
