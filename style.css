@@ -33,8 +33,7 @@ button {
 #status {
     margin-top: 1rem;
     font-weight: bold;
-}
-
+}   
 .goal-item {
     display: flex;
     align-items: center;
@@ -55,4 +54,23 @@ button {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     word-wrap: break-word; /* Ensure long words or URLs break to avoid overflow */
+}
+
+#goalsModal {
+    display: none;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: absolute; /* Use absolute positioning */
+    right: 0; /* Align to the right */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust for perfect centering */
+    width: 400px;
+}
+
+#goalsInput {
+    width: 100%; /* Ensure the input takes full width */
+    height: 100px; /* Adjust height as needed */
+    margin-bottom: 1rem; /* Space between input and button */
 }
