@@ -16,6 +16,9 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
+@app.route('/options', methods=['OPTIONS'])
+def handle_options():
+    return '', 200
 # API tokens
 PUSHOVER_API_TOKEN = os.environ.get('PUSHOVER_API_TOKEN', 'a9qoo26o82jqweeg8p2zf3oudomt4h')
 PUSHOVER_USER_KEY = os.environ.get('PUSHOVER_USER_KEY', 'u1b3s25dbbus9eie2hy9jhtu6ah223')
@@ -61,37 +64,6 @@ active_users = set()
 
 @app.route('/start', methods=['POST'])
 def start_tracking():
-    user_id = request.json.get('userId')
-    active_users.add(user_id)
-    user_activity[user_id] = time.time()
-    return jsonify({"status": "tracking started"})
-
-@app.route('/stop', methods=['POST'])
-def stop_tracking():
-    user_id = request.json.get('userId')
-    if user_id in active_users:
-        active_users.remove(user_id)
-    if user_id in user_activity:
-        del user_activity[user_id]
-    return jsonify({"status": "tracking stopped"})
-
-@app.route('/update_activity', methods=['POST'])
-def update_activity():
-    user_id = request.json.get('userId')
-    user_activity[user_id] = time.time()
-    return jsonify({"status": "activity updated"})
-
-
-def check_inactivity(user_id):
-    while user_id in sessions and sessions[user_id]['active']:
-        current_time = time.time()
-        if current_time - sessions[user_id]['last_activity'] >= 300:  # 5 minutes
-            send_pushover_notification()
-            sessions[user_id]['last_activity'] = current_time
-        time.sleep(60)  # Check every minute
-
-@app.route('/start', methods=['POST'])
-def start_tracking():
     user_id = request.json.get('userId', 'default')
     if user_id not in sessions:
         sessions[user_id] = {
@@ -111,13 +83,22 @@ def stop_tracking():
         return jsonify({"status": "stopped"})
     return jsonify({"status": "not running"})
 
-@app.route('/activity', methods=['POST'])
+@app.route('/update_activity', methods=['POST'])
 def update_activity():
     user_id = request.json.get('userId', 'default')
     if user_id in sessions:
         sessions[user_id]['last_activity'] = time.time()
         return jsonify({"status": "updated"})
     return jsonify({"status": "no active session"}), 400
+
+
+def check_inactivity(user_id):
+    while user_id in sessions and sessions[user_id]['active']:
+        current_time = time.time()
+        if current_time - sessions[user_id]['last_activity'] >= 300:  # 5 minutes
+            send_pushover_notification()
+            sessions[user_id]['last_activity'] = current_time
+        time.sleep(60)  # Check every minute
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
