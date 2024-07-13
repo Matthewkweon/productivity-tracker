@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const goalsModal = document.getElementById('goalsModal');
     const saveGoalsBtn = document.getElementById('saveGoalsBtn');
     const goalsInput = document.getElementById('goalsInput');
+    const goalsDisplay = document.getElementById('goalsDisplay');
+    const goalsText = document.getElementById('goalsText');
 
     let studyGoals = "";
     startBtn.addEventListener('click', () => {
@@ -18,6 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
     saveGoalsBtn.addEventListener('click', () => {
         studyGoals = goalsInput.value;
         goalsModal.style.display = 'none';
+        goalsDisplay.style.display = 'block';
+        goalsText.textContent = studyGoals;
         console.log("Study goals saved: ", studyGoals);  // For debugging
 
         startTracking(studyGoals);
@@ -26,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
     stopBtn.addEventListener('click', () => {
         studyGoals = "";
         goalsInput.value = "";
+        goalsDisplay.style.display = 'none';
         console.log("Study session ended. Goals cleared.");  // For debugging
 
         stopTracking();
@@ -33,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-function startTracking() {
+function startTracking(goals) {
     console.log('Start button clicked');
     fetch(`${API_URL}/start`, {
         method: 'POST',
