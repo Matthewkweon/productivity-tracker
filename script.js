@@ -49,8 +49,9 @@ function updateActivity() {
         fetch(`${API_URL}/update_activity`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId })
-        });
+            body: JSON.stringify({ userId }),
+            credentials: 'include'
+        }).catch(error => console.error('Error updating activity:', error));
     }
 }
 
