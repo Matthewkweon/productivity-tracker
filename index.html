@@ -7,25 +7,27 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Productivity Tracker</h1>
-        <button id="startButton">Start Study Session</button>
-        <button id="stopButton">End Study Session</button>
-        <div id="status"></div>
-        <div id="pomodoroTimer">
-            <h2>Pomodoro Timer</h2>
-            <p id="timer">25:00</p>
-            <p id="pomodoroStatus"></p>
+    <div class="main-container">
+        <div class="container">
+            <h1>Productivity Tracker</h1>
+            <button id="startButton">Start Study Session</button>
+            <button id="stopButton">End Study Session</button>
+            <div id="status"></div>
+            <div id="pomodoroTimer">
+                <h2>Pomodoro Timer</h2>
+                <p id="timer">25:00</p>
+                <p id="pomodoroStatus"></p>
+            </div>
         </div>
-    </div>
-    <div id="goalsModal" style="display:none;">
-        <h2>Study Goals</h2>
-        <textarea id="goalsInput" placeholder="Write down your goals..."></textarea>
-        <button id="saveGoalsBtn">Save Goals</button>
-    </div>
-    <div id="goalsDisplay" style="display:none;">
-        <h2>Your Goals for This Session</h2>
-        <div id="goalsText"></div> <!-- Changed from <p> to <div> -->
+        <div id="goalsModal" style="display:none;">
+            <h2>Study Goals</h2>
+            <textarea id="goalsInput" placeholder="Write down your goals..."></textarea>
+            <button id="saveGoalsBtn">Save Goals</button>
+        </div>
+        <div id="goalsDisplay" style="display:none;">
+            <h2>Your Goals for This Session</h2>
+            <div id="goalsText"></div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

@@ -7,6 +7,11 @@ body {
     margin: 0;
     background-color: #f0f0f0;
 }
+.main-container {
+    display: flex;
+    gap: 2rem; /* Add space between the two sections */
+}
+
 .container {
     text-align: center;
     background-color: white;
