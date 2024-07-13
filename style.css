@@ -50,7 +50,7 @@ button {
     padding: 1rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-left: 5rem; /* Increase the margin to the left */
+    margin-left: 3rem; /* Increase the margin to the left */
 }
 
 #goalsText {
