@@ -23,55 +23,48 @@ document.addEventListener("DOMContentLoaded", function () {
         goalsModal.style.display = 'none';
         goalsDisplay.style.display = 'block';
 
+        // Split the goals into an array
         const goalsArray = studyGoals.split('\n');
+    
+        // Clear any existing content in goalsText
         goalsText.innerHTML = '';
-
+    
+        // Create checkboxes for each goal
         goalsArray.forEach(goal => {
             if (goal.trim()) {
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.className = 'goal-checkbox';
-
+    
                 const label = document.createElement('label');
                 label.textContent = goal;
-
+    
                 const div = document.createElement('div');
                 div.className = 'goal-item';
                 div.appendChild(checkbox);
                 div.appendChild(label);
-
+    
                 goalsText.appendChild(div);
             }
         });
 
-        console.log("Study goals saved: ", studyGoals);
+        console.log("Study goals saved: ", studyGoals);  // For debugging
         startTracking(studyGoals);
         startPomodoro();
     });
+    
 
     stopBtn.addEventListener('click', () => {
         studyGoals = "";
         goalsInput.value = "";
         goalsDisplay.style.display = 'none';
-        console.log("Study session ended. Goals cleared.");
+        console.log("Study session ended. Goals cleared.");  // For debugging
 
         stopTracking();
         stopPomodoro();
     });
-
-    document.addEventListener('mousemove', updateActivity);
-    document.addEventListener('keypress', updateActivity);
-
-    function updateActivity() {
-        if (trackingActive) {
-            fetch(`${API_URL}/update_activity`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId })
-            });
-        }
-    }
 });
+
 
 function startTracking(goals) {
     console.log('Start button clicked');
@@ -113,8 +106,18 @@ function stopTracking() {
     });
 }
 
+function updateActivity() {
+    if (trackingActive) {
+        fetch(`${API_URL}/update_activity`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId })
+        });
+    }
+}
+
 function startActivityMonitoring() {
-    activityInterval = setInterval(updateActivity, 60000); // Send activity update every minute
+    activityInterval = setInterval(updateActivity, 60000);  // Send activity update every minute
     document.addEventListener('mousemove', updateActivity);
     document.addEventListener('keypress', updateActivity);
 }
@@ -127,7 +130,7 @@ function stopActivityMonitoring() {
 
 function startPomodoro() {
     let time = 25 * 60;
-    let isStudySession = true; // Initialize isStudySession to true
+    let isStudySession = true;  // Initialize isStudySession to true
     timerInterval = setInterval(() => {
         if (time <= 0) {
             if (isStudySession) {
