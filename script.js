@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
         studyGoals = goalsInput.value;
         goalsModal.style.display = 'none';
         goalsDisplay.style.display = 'block';
-        goalsText.textContent = studyGoals;
+        goalsText.innerHTML = studyGoals.replace(/\n/g, '<br>');
         console.log("Study goals saved: ", studyGoals);  // For debugging
 
         startTracking(studyGoals);
@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
         studyGoals = "";
         goalsInput.value = "";
         goalsDisplay.style.display = 'none';
-        goalsText.innerHTML = studyGoals.replace(/\n/g, '<br>');
         console.log("Study session ended. Goals cleared.");  // For debugging
 
         stopTracking();
