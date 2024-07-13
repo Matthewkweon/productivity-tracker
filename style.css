@@ -12,14 +12,16 @@ body {
     gap: 5em; /* Add space between the two sections */
 }
 
-.container {
+.container, #goalsDisplay {
     text-align: center;
     background-color: white;
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
+    width: 400px; /* Set a fixed width for both boxes */
 }
+
 button {
     font-size: 1rem;
     padding: 0.5rem 1rem;
