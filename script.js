@@ -130,6 +130,7 @@ function stopActivityMonitoring() {
 
 function startPomodoro() {
     let time = 25 * 60;
+    let isStudySession = true;  // Initialize isStudySession to true
     timerInterval = setInterval(() => {
         if (time <= 0) {
             if (isStudySession) {
@@ -154,5 +155,4 @@ function stopPomodoro() {
     clearInterval(timerInterval);
     document.getElementById('timer').textContent = '25:00';
     document.getElementById('pomodoroStatus').textContent = '';
-    isStudySession = true;
 }
