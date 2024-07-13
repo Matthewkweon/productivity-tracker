@@ -9,7 +9,7 @@ body {
 }
 .main-container {
     display: flex;
-    gap: 2rem; /* Add space between the two sections */
+    gap: 10rem; /* Add space between the two sections */
 }
 
 .container {
