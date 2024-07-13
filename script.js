@@ -24,46 +24,42 @@ document.addEventListener("DOMContentLoaded", function () {
         goalsModal.style.display = 'none';
         goalsDisplay.style.display = 'block';
 
-        // Split the goals into an array
         const goalsArray = studyGoals.split('\n');
-    
-        // Clear any existing content in goalsText
         goalsText.innerHTML = '';
-    
-        // Create checkboxes for each goal
+
         goalsArray.forEach(goal => {
             if (goal.trim()) {
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.className = 'goal-checkbox';
-    
+
                 const label = document.createElement('label');
                 label.textContent = goal;
-    
+
                 const div = document.createElement('div');
                 div.className = 'goal-item';
                 div.appendChild(checkbox);
                 div.appendChild(label);
-    
+
                 goalsText.appendChild(div);
             }
         });
 
-        console.log("Study goals saved: ", studyGoals);  // For debugging
+        console.log("Study goals saved: ", studyGoals);
         startTracking(studyGoals);
         startPomodoro();
     });
-    
 
     stopBtn.addEventListener('click', () => {
         studyGoals = "";
         goalsInput.value = "";
         goalsDisplay.style.display = 'none';
-        console.log("Study session ended. Goals cleared.");  // For debugging
+        console.log("Study session ended. Goals cleared.");
 
         stopTracking();
         stopPomodoro();
     });
+
     document.addEventListener('mousemove', updateLastActivity);
     document.addEventListener('keypress', updateLastActivity);
 
@@ -73,7 +69,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 });
-
 
 function startTracking(goals) {
     console.log('Start button clicked');
@@ -87,7 +82,7 @@ function startTracking(goals) {
         console.log('Start response:', data);
         document.getElementById('status').textContent = 'Study session started!';
         trackingActive = true;
-        startActivityMonitoring();
+        startSocketConnection(); // Start socket connection here
     })
     .catch(error => {
         console.error('Error:', error);
@@ -107,7 +102,7 @@ function stopTracking() {
         console.log('Stop response:', data);
         document.getElementById('status').textContent = 'Study session ended.';
         trackingActive = false;
-        stopActivityMonitoring();
+        stopSocketConnection(); // Stop socket connection here
     })
     .catch(error => {
         console.error('Error:', error);
@@ -116,7 +111,7 @@ function stopTracking() {
 }
 
 function startSocketConnection() {
-    socket = io(API_URL);
+    socket = io(API_URL); // Initialize the socket connection
 
     socket.on('connect', () => {
         console.log('Connected to WebSocket');
@@ -145,7 +140,7 @@ function updateActivity() {
 }
 
 function startActivityMonitoring() {
-    activityInterval = setInterval(updateActivity, 60000);  // Send activity update every minute
+    activityInterval = setInterval(updateActivity, 60000); // Send activity update every minute
     document.addEventListener('mousemove', updateActivity);
     document.addEventListener('keypress', updateActivity);
 }
@@ -158,7 +153,7 @@ function stopActivityMonitoring() {
 
 function startPomodoro() {
     let time = 25 * 60;
-    let isStudySession = true;  // Initialize isStudySession to true
+    let isStudySession = true; // Initialize isStudySession to true
     timerInterval = setInterval(() => {
         if (time <= 0) {
             if (isStudySession) {
