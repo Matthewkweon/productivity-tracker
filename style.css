@@ -42,11 +42,15 @@ button {
 }
 
 #goalsDisplay{
-    margin-top: 2rem; /* Added margin to top of goals display */
-    margin-left: 5rem; /* Added margin to left of goals display */
+    margin-top: 2rem; /* Add space at the top */
     text-align: left; /* Align text to the left for readability */
-    width: 50%; /* Ensure it takes the full width */
+    width: 100%; /* Ensure it takes the full width */
     max-width: 600px; /* Limit the maximum width */
+    background-color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-left: 5rem; /* Increase the margin to the left */
 }
 
 #goalsText {
