@@ -2,7 +2,6 @@ const API_URL = 'https://productivityapp-06361fe96871.herokuapp.com'; // Replace
 let userId = Date.now().toString();
 let trackingActive = false;
 let activityInterval;
-let socket;
 
 document.addEventListener("DOMContentLoaded", function () {
     const startBtn = document.getElementById('startButton');
