@@ -66,6 +66,11 @@ def check_inactivity():
         
         time.sleep(60)  # Check every minute
 
+        if current_time - sessions[user_id]['last_activity'] >= 5:  # 5 minutes
+            send_pushover_notification()
+            sessions[user_id]['last_activity'] = current_time
+        time.sleep(1)  # Check every minute
+
 @app.route('/start', methods=['POST'])
 def start_tracking():
     user_id = request.json.get('userId', 'default')
