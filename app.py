@@ -102,6 +102,16 @@ def check_inactivity(user_id):
             sessions[user_id]['last_activity'] = current_time
         time.sleep(30)  # Check every minute
 
+@app.route('/start', methods=['POST'])
+def start():
+    start_time = datetime.now().isoformat()
+    return jsonify({'start_time': start_time})
+
+@app.route('/stop', methods=['POST'])
+def stop():
+    stop_time = datetime.now().isoformat()
+    return jsonify({'stop_time': stop_time})
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)

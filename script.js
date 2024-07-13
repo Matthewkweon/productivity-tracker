@@ -99,9 +99,3 @@ function stopActivityMonitoring() {
     document.removeEventListener('mousemove', updateActivity);
     document.removeEventListener('keypress', updateActivity);
 }
-document.getElementById('startButton').addEventListener('click', () => {
-    document.getElementById('goalsModal').style.display = 'block';
-});
-
-document.getElementById('stopButton').addEventListener('click', stopTracking);
-
