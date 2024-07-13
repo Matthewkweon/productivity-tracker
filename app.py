@@ -97,20 +97,11 @@ def update_activity():
 def check_inactivity(user_id):
     while user_id in sessions and sessions[user_id]['active']:
         current_time = time.time()
-        if current_time - sessions[user_id]['last_activity'] >= 600:  # 5 minutes
+        if current_time - sessions[user_id]['last_activity'] >= 15:  # 10 minutes
             send_pushover_notification()
             sessions[user_id]['last_activity'] = current_time
-        time.sleep(30)  # Check every minute
+        time.sleep(2)  # Check every 30 seconds
 
-@app.route('/start', methods=['POST'])
-def start():
-    start_time = datetime.now().isoformat()
-    return jsonify({'start_time': start_time})
-
-@app.route('/stop', methods=['POST'])
-def stop():
-    stop_time = datetime.now().isoformat()
-    return jsonify({'stop_time': stop_time})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
