@@ -65,13 +65,15 @@ active_users = set()
 @app.route('/start', methods=['POST'])
 def start_tracking():
     user_id = request.json.get('userId', 'default')
+    goals = request.json.get('goals', '')
     if user_id not in sessions:
         sessions[user_id] = {
             'last_activity': time.time(),
-            'active': True
+            'active': True,
+            'goals': goals
         }
         threading.Thread(target=check_inactivity, args=(user_id,)).start()
-        return jsonify({"status": "started"})
+        return jsonify({"status": "started","goals":goals})
     return jsonify({"status": "already running"})
 
 @app.route('/stop', methods=['POST'])
