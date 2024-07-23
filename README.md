@@ -1,6 +1,6 @@
 # Productivity Tracker
 
-Productivity Tracker is a web application designed to help users manage their study sessions and maintain focus. It features activity tracking, inactivity notifications, and daily goal setting.
+Productivity Tracker is a web application designed to help users manage their study sessions and maintain focus. It features activity tracking, timer, inactivity notifications, and daily goal setting.
 
 ## Features
 
@@ -9,6 +9,10 @@ Productivity Tracker is a web application designed to help users manage their st
 - Send notifications for inactivity periods
 - Set and manage daily goals
 - Motivational messages to keep users engaged
+- Incorporates a pomodoro timer to keep track of time spent studying
+- Checkboxes for each study session to insure a productive time
+
+link to productivity website: https://matthewkweon.github.io/productivity-tracker/
 
 ## Technologies Used
 
